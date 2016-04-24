@@ -1,11 +1,11 @@
 <!DOCTYPE HTML>
-<html style="height: 100%;">
+<html style="height: 100%;" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-<!-- Created using Articulate Presenter '13 7.7 - http://www.articulate.com  --> 
-<!-- version: 7.7.1509.1618 --> 
+<!-- Created using Articulate Storyline 2.7 - http://www.articulate.com  --> 
+<!-- version: 2.7.1509.1408 --> 
 
-<title>2015 SMP AAR</title>
+<title>Demo</title>
 <style>
 body { margin: 0px; } 
 object {outline: none;}
@@ -80,12 +80,12 @@ if (g_bRedirectAMP)
 }
 else if (g_bRedirectHTML5)
 {
-	var strLocation = "presentation_html5.html";
+	var strLocation = "story_html5.html";
 	
 	if (g_bTinCan)
 	{
 		strLocation += "?tincan=" + g_bTinCan + "&" + document.location.search.substr(1);
-	}	
+	}
 	else if (g_bLMS)
 	{
 		strLocation += "?lms=1";
@@ -99,20 +99,20 @@ else if (g_bRedirectHTML5)
 	location.replace(strLocation);	
 }
 
-var g_strContentFolder = "presentation_content";
+var g_strContentFolder = "story_content";
 var g_bProjector = false;
-var g_strSwfFile = "presentation.swf";
-var g_nWidth = 740;
-var g_nHeight = 476;
-var g_strScale = "show all";	// noscale | show all
-var g_strBrowserSize = "fullscreen";	// default, fullscreen, optimal
+var g_strSwfFile = "story.swf";
+var g_nWidth = 980;
+var g_nHeight = 658;
+var g_strScale = "noscale";	// noscale | show all
+var g_strBrowserSize = "default";	// default, fullscreen, optimal
 var g_strBgColor = "#FFFFFF";
 var g_strAlign = "middle";
 var g_strQuality = "best";
 var g_bCaptureRC = false;
 var g_strFlashVars = "";
 var g_bScrollbars = true;
-var g_strWMode = "window"; // transparent | window (use "window" for optimal performance, transparent for webobject support)
+var g_strWMode = "transparent"; // transparent | window (use "window" for optimal performance, transparent for webobject support)
 
 if (g_strScale == "show all")
 {
@@ -121,8 +121,8 @@ if (g_strScale == "show all")
 
 </script>
 
-<script SRC="presentation_content/user.js" TYPE="text/javascript"></script>
-<script src="presentation_content/presentation.js" type="text/javascript"></script>
+<script SRC="story_content/user.js" TYPE="text/javascript"></script>
+<script src="story_content/story.js" type="text/javascript"></script>
 
 </head>
 
