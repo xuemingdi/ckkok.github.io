@@ -2931,7 +2931,7 @@ ul.menu_nav
 .toptab.tab, .toptab.customlink
 {
 	max-width:initial;
-	overflow-x: visible;
+	overflow-x: initial;
 	white-space: initial;
 }
 .toptab.tab>span, .toptab.customlink>span
