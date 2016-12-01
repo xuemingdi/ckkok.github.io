@@ -30,9 +30,20 @@ $(function () {
                         // set up the updating of the chart each second
                         var series = this.series[0];
                         setInterval(function () {
-                            globalx = globalx + 0.2;
-                            series.addPoint([globalx, Math.random()]);
-                        }, 1000);
+                            globalx = globalx + 0.1;
+                            if (globalx < 3) {
+                                globaly = 0.1*globalx;
+                            } else if ((globalx >= 3) && (globalx < 4)) {
+                                globaly = 0.3;
+                            } else if ((globalx >= 4) && (globalx < 6)) {
+                                globaly = 0.1*(globalx - 4) + 0.3;
+                            } else if ((globalx >= 6) && (globalx < 7)) {
+                                globaly = 0.5;
+                            } else if (globalx >= 7) {
+                                globaly = 0.1*(globalx - 7) + 0.5;
+                            };
+                            series.addPoint([globalx, globaly]);
+                        }, 330);
                     }
                 }
             },
@@ -68,6 +79,8 @@ $(function () {
                 minPadding: 0,
                 maxPadding: 0,
                 lineWidth: 1,
+                min: 0,
+                max: 1,
                 plotLines: [{
                     //value: 0,
                     //width: 1,
@@ -96,25 +109,8 @@ $(function () {
                 },
             },
             series: [{
-                data: (function () {
-                    // generate an array of random data
-                    var data = [],
-                        i;
-
-                    for (i = 0; i < 20; i++) {
-                        data.push({
-                            x: globalx,
-                            y: Math.random()
-                        });
-                        globalx = globalx + 0.2;
-                    }
-                    return data;
-                }())
+                data: [0]
             }]
-        }, function (chart) {
-            setTimeout(function() {
-                            chart.renderer.text("test", 5, 0.5).add();
-                        }, 1000);
         });
     });
 });
