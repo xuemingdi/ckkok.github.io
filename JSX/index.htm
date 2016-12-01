@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<style type="text/css">
+${demo.css}
+		</style>
+		<script type="text/javascript">
+        var globalx = 0, globaly = 0;
+        var mychart;
+$(function () {
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        mychart = Highcharts.chart('container', {
+            chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                //marginRight: 10,
+                spacing : [0, 0, 0, 0],
+                events: {
+                    load: function () {
+                        // set up the updating of the chart each second
+                        var series = this.series[0];
+                        setInterval(function () {
+                            globalx = globalx + 0.2;
+                            series.addPoint([globalx, Math.random()]);
+                        }, 1000);
+                    }
+                }
+            },
+            credits: {enabled: false},
+            title: {
+                text: 'Temperature - Time Graph'
+            },
+            xAxis: {
+                title: {text: 'Time / seconds'},
+                labels: {enabled: false},
+                type: 'linear',
+                tickAmount: 0,
+                tickLength: 0,
+                tickWidth: 0,
+                tickPosition: 'outside',
+                lineWidth: 1,
+                min: 0,
+                max: 15,
+                minPadding: 0,
+                maxPadding: 0
+            },
+            yAxis: {
+                title: {
+                    text: 'Temperature / °C'
+                },
+                labels: {enabled: false},
+                gridLineWidth: 0,
+                minorGridLineWidth: 0,
+                tickAmount: 0,
+                tickLength: 0,
+                tickWidth: 0,
+                tickPosition: 'outside',
+                minPadding: 0,
+                maxPadding: 0,
+                lineWidth: 1,
+                plotLines: [{
+                    //value: 0,
+                    //width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            plotOptions: {
+                spline: {
+                    marker: {
+                        enabled: false
+                    },
+                    states: {
+                        hover: {
+                            enabled: false
+                        },
+                    },
+                },
+            },
+            series: [{
+                data: (function () {
+                    // generate an array of random data
+                    var data = [],
+                        i;
+
+                    for (i = 0; i < 20; i++) {
+                        data.push({
+                            x: globalx,
+                            y: Math.random()
+                        });
+                        globalx = globalx + 0.2;
+                    }
+                    return data;
+                }())
+            }]
+        }, function (chart) {
+            setTimeout(function() {
+                            chart.renderer.text("test", 5, 0.5).add();
+                        }, 1000);
+        });
+    });
+});
+		</script>
+	</head>
+	<body>
+<script src="./highcharts.js"></script>
+<script src="./exporting.js"></script>
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>
