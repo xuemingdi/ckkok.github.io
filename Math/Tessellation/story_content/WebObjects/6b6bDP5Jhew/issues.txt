@@ -1,0 +1,7 @@
+
+
+Excessive use of global variables
+Excessive use of flags
+
+mousePressed is global but refenced in several event functions to set / reset -- isClicking 
+ -- this results in an event race-condition
