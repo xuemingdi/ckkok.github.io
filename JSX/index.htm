@@ -3,124 +3,209 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>Highcharts Example</title>
-
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-		<style type="text/css">
-${demo.css}
-		</style>
+		<script src="jquery-3.1.1.min.js"></script>
 		<script type="text/javascript">
-        var globalx = 0, globaly = 0;
-        var mychart;
-$(function () {
-    $(document).ready(function () {
-        Highcharts.setOptions({
-            global: {
-                useUTC: false
-            }
-        });
+            const _START_TEMP_SOLID = 250; //Using Kelvins here because I don't like negative values
+            const _START_TEMP_LIQUID = 303;
+            const _START_TEMP_GAS = 390;
+            const _GRAPH_UPDATE_RATE = 1; //How many times a second should the graph update?
+            const _GRAPH_COLOR = 'black';
+            const _GRAPH_AXES_COLOR = 'black';
+            const _GRAPH_MIN_TIME = 0.0;
+            const _GRAPH_MAX_TIME = 160.0;
+            const _GRAPH_MIN_TEMPERATURE = 250.0;
+            const _GRAPH_MAX_TEMPERATURE = 500.0;
+            const _ENERGY_INPUT_RATE = 2700; //How much energy is being put into the system per second (Joules)
+            const _ENTHALPY_OF_FUSION = 33355; //For 100g of ice
+            const _ENTHALPY_OF_VAPORIZATION = 226000; //For 100g of water
+            const _MELTING_POINT = 273; //Using Kelvins here because I don't like negative values
+            const _BOILING_POINT = 373; 
+            const _HEAT_CAPACITY_SOLID = 211; //For 100g of ice
+            const _HEAT_CAPACITY_LIQUID = 418; //For 100g of water
+            const _HEAT_CAPACITY_GAS = 200; //For 100g of steam
+            const _STATE_SOLID = 0; //Numerical conversions of states
+            const _STATE_SOLID_MELTING = 1;
+            const _STATE_LIQUID = 2;
+            const _STATE_LIQUID_BOILING = 3;
+            const _STATE_GAS = 4;
 
-        mychart = Highcharts.chart('container', {
-            chart: {
-                type: 'spline',
-                animation: Highcharts.svg, // don't animate in old IE
-                //marginRight: 10,
-                spacing : [0, 0, 0, 0],
-                events: {
-                    load: function () {
-                        // set up the updating of the chart each second
-                        var series = this.series[0];
-                        setInterval(function () {
-                            globalx = globalx + 0.1;
-                            if (globalx < 3) {
-                                globaly = 0.1*globalx;
-                            } else if ((globalx >= 3) && (globalx < 4)) {
-                                globaly = 0.3;
-                            } else if ((globalx >= 4) && (globalx < 6)) {
-                                globaly = 0.1*(globalx - 4) + 0.3;
-                            } else if ((globalx >= 6) && (globalx < 7)) {
-                                globaly = 0.5;
-                            } else if (globalx >= 7) {
-                                globaly = 0.1*(globalx - 7) + 0.5;
-                            };
-                            series.addPoint([globalx, globaly]);
-                        }, 330);
-                    }
-                }
-            },
-            credits: {enabled: false},
-            title: {
-                text: 'Temperature - Time Graph'
-            },
-            xAxis: {
-                title: {text: 'Time / seconds'},
-                labels: {enabled: false},
-                type: 'linear',
-                tickAmount: 0,
-                tickLength: 0,
-                tickWidth: 0,
-                tickPosition: 'outside',
-                lineWidth: 1,
-                min: 0,
-                max: 15,
-                minPadding: 0,
-                maxPadding: 0
-            },
-            yAxis: {
-                title: {
-                    text: 'Temperature / °C'
-                },
-                labels: {enabled: false},
-                gridLineWidth: 0,
-                minorGridLineWidth: 0,
-                tickAmount: 0,
-                tickLength: 0,
-                tickWidth: 0,
-                tickPosition: 'outside',
-                minPadding: 0,
-                maxPadding: 0,
-                lineWidth: 1,
-                min: 0,
-                max: 1,
-                plotLines: [{
-                    //value: 0,
-                    //width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                enabled: false
-            },
-            legend: {
-                enabled: false
-            },
-            exporting: {
-                enabled: false
-            },
-            plotOptions: {
-                spline: {
-                    marker: {
-                        enabled: false
-                    },
-                    states: {
-                        hover: {
+            const _START_STATE = _STATE_SOLID;
+            const _END_RUN_DURATION = 30; //Time in seconds to continue running for after the last state change
+
+            var temperature;
+            var temp_change_solid, temp_change_liquid, temp_change_gas, melt_duration, boil_duration, total_duration;
+            var temperaturemax;
+            var updateinterval;
+            var state;
+            var time = 0.0;
+            var graph;
+            var timeline;
+            var plot;
+            var globalx = 0.0, globaly = 0.0;
+
+            $(function () {
+                $(document).ready(function () {
+                    updateinterval = 1 / _GRAPH_UPDATE_RATE;
+
+                    Highcharts.setOptions({
+                        global: {
+                            useUTC: false
+                        }
+                    });
+
+                    Highcharts.chart('container', {
+                        chart: {
+                            type: 'line',
+                            animation: Highcharts.svg, // don't animate in old IE
+                            backgroundColor: 'rgba(255, 255, 255, 0.002)',
+                            events: {
+                                load: function (event) {
+                                    //Calculate the parameters of updates
+                                    graph = this.series[0];
+                                    switch (_START_STATE) {
+                                        case _STATE_SOLID:
+                                            temperature = _START_TEMP_SOLID;
+                                            break;
+                                        case _STATE_LIQUID:
+                                            temperature = _START_TEMP_LIQUID;
+                                            break;
+                                        case _STATE_GAS:
+                                            temperature = _START_TEMP_GAS;
+                                            break;
+                                    };
+                                    state = _START_STATE;
+                                    temp_change_solid = ((_ENERGY_INPUT_RATE / _HEAT_CAPACITY_SOLID) / _GRAPH_UPDATE_RATE);
+                                    temp_change_liquid = ((_ENERGY_INPUT_RATE / _HEAT_CAPACITY_LIQUID) / _GRAPH_UPDATE_RATE);
+                                    temp_change_gas = ((_ENERGY_INPUT_RATE / _HEAT_CAPACITY_GAS) / _GRAPH_UPDATE_RATE);
+                                    melt_duration = (_ENTHALPY_OF_FUSION / _ENERGY_INPUT_RATE);
+                                    boil_duration = (_ENTHALPY_OF_VAPORIZATION / _ENERGY_INPUT_RATE);
+                                    total_duration = (((_MELTING_POINT - _START_TEMP_SOLID) * (_HEAT_CAPACITY_SOLID)) + ((_BOILING_POINT - _MELTING_POINT) * (_HEAT_CAPACITY_LIQUID))) / (_ENERGY_INPUT_RATE) + melt_duration + boil_duration + _END_RUN_DURATION;
+                                    temperaturemax = _BOILING_POINT + ((_ENERGY_INPUT_RATE * _END_RUN_DURATION) / (_HEAT_CAPACITY_GAS));
+                                    
+                                    if (total_duration > _GRAPH_MAX_TIME) || (temperaturemax > _GRAPH_MAX_TEMPERATURE) {
+                                        setTimeout(function() {
+                                            plot.xAxis[0].setExtremes(0, total_duration, true, false);
+                                            plot.yAxis[0].setExtremes(temperature, temperaturemax, true, false);
+                                        }, 100);
+                                    };
+                                                                        
+                                    graph.addPoint([time, temperature]);
+
+                                    //Set up the updating of the chart
+                                    timeline = setInterval(function () {
+                                        time += updateinterval;
+                                        switch (state) {
+                                            case _STATE_SOLID:
+                                                temperature += temp_change_solid;
+                                                break;
+                                            case _STATE_SOLID_MELTING:
+                                                break;
+                                            case _STATE_LIQUID:
+                                                temperature += temp_change_liquid;
+                                                break;
+                                            case _STATE_LIQUID_BOILING:
+                                                break;
+                                            case _STATE_GAS:
+                                                temperature += temp_change_gas;
+                                                break;
+                                        };
+                                        if ((state == _STATE_SOLID) && (temperature > _MELTING_POINT)) {
+                                            state = _STATE_SOLID_MELTING;
+                                            setTimeout(function(){state = _STATE_LIQUID;}, melt_duration*1000);
+                                        } else if ((state == _STATE_LIQUID) && (temperature > _BOILING_POINT)) {
+                                            state = _STATE_LIQUID_BOILING;
+                                            setTimeout(function(){state = _STATE_GAS;}, boil_duration*1000);
+                                        };
+                                        /*if ((globalx > 2.9) && (globalx < 3.1)) {
+                                            mychart.renderer.text('Test', 310, 270).add();
+                                        };*/
+                                        graph.addPoint([time, temperature]);
+                                        if ((time > total_duration) || (temperature > temperaturemax)) {
+                                            clearInterval(timeline);
+                                        };
+                                    }, updateinterval*1000);
+                                },
+                            },
+                        },
+                        credits: {enabled: false},
+                        title: {
+                            text: 'Temperature - Time Graph'
+                        },
+                        xAxis: {
+                            title: {
+                                text: 'Time / seconds',
+                            },
+                            labels: {enabled: false},
+                            type: 'linear',
+                            tickAmount: 0,
+                            tickLength: 0,
+                            tickWidth: 0,
+                            tickPosition: 'outside',
+                            lineColor: _GRAPH_AXES_COLOR,
+                            lineWidth: 1,
+                            min: _GRAPH_MIN_TIME,
+                            max: _GRAPH_MAX_TIME,
+                            startOnTick: false,
+                            endOnTick: false,
+                            minPadding: 0,
+                            maxPadding: 0,
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Temperature / °C',
+                            },
+                            labels: {enabled: false},
+                            gridLineWidth: 0,
+                            minorGridLineWidth: 0,
+                            tickAmount: 0,
+                            tickLength: 0,
+                            tickWidth: 0,
+                            tickPosition: 'outside',
+                            minPadding: 0,
+                            maxPadding: 0,
+                            startOnTick: false,
+                            endOnTick: false,
+                            minRange: 0.1,
+                            lineWidth: 1,
+                            lineColor: _GRAPH_AXES_COLOR,
+                            min: _GRAPH_MIN_TEMPERATURE,
+                            max: _GRAPH_MAX_TEMPERATURE,
+                        },
+                        tooltip: {
                             enabled: false
                         },
-                    },
-                },
-            },
-            series: [{
-                data: [0]
-            }]
-        });
-    });
-});
+                        legend: {
+                            enabled: false
+                        },
+                        exporting: {
+                            enabled: false
+                        },
+                        plotOptions: {
+                            line: {
+                                marker: {
+                                    enabled: false
+                                },
+                                states: {
+                                    hover: {
+                                        enabled: false
+                                    },
+                                },
+                            },
+                        },
+                        series: [{
+                            data: [],
+                            color: _GRAPH_COLOR,
+                        }]
+                    });
+                    plot = $('#container').highcharts();
+                });
+            });
 		</script>
 	</head>
 	<body>
 <script src="./highcharts.js"></script>
 <script src="./exporting.js"></script>
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
+<div id="container" style="background:white; min-width: 310px; height: 400px; margin: 0 auto"></div>
 	</body>
 </html>
