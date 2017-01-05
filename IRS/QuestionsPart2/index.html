@@ -1,168 +1,142 @@
-<!DOCTYPE HTML>
-<html style="height: 100%;">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-<!-- Created using Articulate Presenter '13 7.5 - http://www.articulate.com  --> 
-<!-- version: 7.5.1412.920 --> 
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>IRS Questions Questions Questions Part 2 (19 Jan)</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<meta name="viewport" id="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<style>html,body{background:#FFFFFF;}</style>
+	<link href="mobile/player.css" rel="stylesheet" type="text/css" />
+	<!--[if lt IE 9]><script>location.href = location.href.replace("_html5", "_unsupported");</script><![endif]-->
 
-<title>IRS Questions Questions Questions Part 2 (19 Jan)</title>
-<style>
-body { margin: 0px; } 
-object {outline: none;}
-</style>
+	<!-- Created using Articulate Presenter '13 7.5 - http://www.articulate.com  --> 
+	<!-- version: 7.5.1412.920 -->
+</head>
+<body>
+
+	<div class="interstitial white"></div>
+	<span id="loadingSpinner" class="loading"></span>
+
+	<div class="framewrap">
+		<div class="landscape_menu no_logo">
+			<div class="logo_background">
+				<div class="logo_section"></div>
+				<div class="presenter_video_section"></div>
+				<div class="presenter_section"></div>
+			</div>
+			<ul id="menu_tabs" class="menu_nav">
+			</ul>
+			<div id="menu_container" class="menu_container scrollarea">
+				<ul id="slide_list" class="menu_list">
+				</ul>
+			</div>
+		</div>
+		
+		<div class="contentpane">
+			<div id="slidebg"></div>
+			<div id="topbar">
+				<div id="storytitle">
+					<div id="storytitle_section"></div>
+					<div id="timer_section"></div>
+				</div>
+				<div id="toplinks_left"></div>
+				<div id="toplinks_right"></div>
+			</div>
+			<div id="slideframe">
+				<div id="slidecontainer">
+				</div>
+			</div>
+			<div id="controls">
+				<div id="control-finish" class="controlbar-button right" style="display:none;"><a class="icon finish-slide"></a><div class="label finish">FINISH</div></div>
+				<div id="control-submit" class="controlbar-button right" style="display:none;"><a class="icon submit-slide"></a><div class="label submit">SUBMIT</div></div>
+				<div id="control-next" class="controlbar-button right"><div class="label next">NEXT</div><a class="icon next-slide"></a></div>
+				<div id="control-previous" class="controlbar-button right"><a class="icon previous-slide"></a><div class="label prev">PREV</div></div>
+				<div id="control-submitall" class="controlbar-button" style="display:none;"><div class="label submitall">Submit All</div></div>
+				<div id="control-volume" class="controlbar-button compact"><a class="icon volume half"></a></div>
+
+				<div id="control-progress" class="controlbar-button">
+					<div id="control-pauseplay" class="ignore">
+						<a class="icon play" style="display:none;"></a>
+						<a class="icon pause" style="display:none;"></a>
+					</div>
+					<div id="progressbar" class="progress-container">
+						<div class="progress-bar"></div>
+					</div>
+					<a class="icon restart" href="javascript:player.restart()"></a>
+				</div>
+				<span id="indicator"></span>
+			</div>
+		</div>
+	</div>
+</body>
+
+<script src="mobile/player_compiled.js" type="text/javascript"></script>
+
 <script>
-var g_bHtml5Supported = true;
-</script>
-<!--[if lte IE 9]><script>g_bHtml5Supported = false;</script><![endif]-->
 
-<script type="text/javascript">
+	player.autoplay = true;
+	trace.suppress = true;
+	console.suppress = true;
+	player.loopable = false;
+	player.allowRightClick = false;
+	player.isHTML5 = true;
 
-// Detect min flash version
-var g_bMinFlash = false;
-
-if (navigator.plugins["Shockwave Flash"])
-{
-	var arrDescription = navigator.plugins["Shockwave Flash"].description.split(" ");
-	var nVersion = Number(arrDescription[arrDescription.length - 2]);
-
-	g_bMinFlash = (nVersion >= 10) || isNaN(nVersion);
-}
-else
-{
-	try 
+	var globals = {};
+	try
 	{
-		var oActiveX = new ActiveXObject("ShockwaveFlash.ShockwaveFlash.10");
-		if (oActiveX)
-		{
-			g_bMinFlash = true;
-		}
+		globals.bLMS = false;
+		globals.bAOSupport = false;
+		globals.strContentFolder = "presentation_content";
+		globals.bProjector = false;
+		globals.strSwfFile = "presentation.swf";
+		globals.nWidth = 740;
+		globals.nHeight = 476;
+		globals.strScale = "show all";   // noscale | show all
+		globals.strBrowserSize = "fullscreen";      // default, fullscreen, optimal
+		globals.strBgColor = "#FFFFFF";
+		globals.strAlign = "middle";
+		globals.strQuality = "best";
+		globals.bCaptureRC = false;
+		globals.strFlashVars = "";
+		globals.bScrollbars = true;
+		globals.bWarnOnCommitFail = false;
+		globals.strWMode = "window"; // opaque | window (use "window" for optimal performance, opaque for webobject support)
+		globals.strVersion = "7.5.1412.920";
 	}
 	catch (e) {}
-}
+	player.initGlobals();
 
-var g_bLMS = false;
-var g_bTinCan = false;
-var g_bAOSupport = false;
-var g_bWarnOnCommitFail = false;
-var g_bUseHtml5 = true && g_bHtml5Supported;
-var g_bUseMobilePlayer = true;
-var g_biOS = (navigator.userAgent.indexOf("AppleWebKit/") > -1 && navigator.userAgent.indexOf("Mobile/") > -1);
-var g_biPad = (navigator.userAgent.indexOf("iPad") > -1);
-var g_bAndroid = (navigator.userAgent.indexOf("Android") > -1);
 
-var g_bRedirectAMP = ((g_biOS && g_biPad) || g_bAndroid) && g_bUseMobilePlayer;
-var g_bRedirectHTML5 = (g_biOS || !g_bMinFlash) && g_bUseHtml5;
+	var strParams = document.location.search.substr(1);
+	var arrParams = strParams.split("&");
+	var arrCmdValue;
 
-if (g_bRedirectAMP)
-{
-	// Switch to TinCan for AO Reporting
-	if (g_bAOSupport)
+	for (var i = 0; i < arrParams.length; i++)
 	{
-		g_bTinCan = true;
-	}
-	
-	if (g_bTinCan)
-	{
-		var strQuery = "tincan=" + g_bTinCan + "&" + document.location.search.substr(1);
-		
-		if (g_bAOSupport)
+		arrCmdValue = arrParams[i].split("=");
+		switch (arrCmdValue[0])
 		{
-			strQuery = "aosupport=true&" + strQuery;
-			g_bAOSupport = false;
-		}
-		
-		location.replace("amplaunch.html#" + strQuery);
-	}
-	else
-	{
-		location.replace("amplaunch.html");
-	}
-}
-else if (g_bRedirectHTML5)
-{
-	var strLocation = "presentation_html5.html";
-	
-	if (g_bTinCan)
-	{
-		strLocation += "?tincan=" + g_bTinCan + "&" + document.location.search.substr(1);
-	}	
-	else if (g_bLMS)
-	{
-		strLocation += "?lms=1";
-		
-		if (g_bWarnOnCommitFail)
-		{
-			strLocation += "&warncommit=1";
+			case "lms":
+				globals.bLMS = true;
+				break;
+			case "warncommit":
+				g_bWarnOnCommitFail = (arrCmdValue[1] == "1");
+				break;
 		}
 	}
-	
-	location.replace(strLocation);	
-}
 
-var g_strContentFolder = "presentation_content";
-var g_bProjector = false;
-var g_strSwfFile = "presentation.swf";
-var g_nWidth = 740;
-var g_nHeight = 476;
-var g_strScale = "show all";	// noscale | show all
-var g_strBrowserSize = "fullscreen";	// default, fullscreen, optimal
-var g_strBgColor = "#FFFFFF";
-var g_strAlign = "middle";
-var g_strQuality = "best";
-var g_bCaptureRC = false;
-var g_strFlashVars = "";
-var g_bScrollbars = true;
-var g_strWMode = "window"; // transparent | window (use "window" for optimal performance, transparent for webobject support)
+	if (globals.bLMS)
+	{
+		document.write("<scr" + "ipt src='lms/lms.js' type='text/javascript' charset='utf-8'><\/scr" + "ipt>");
+	}
 
-if (g_strScale == "show all")
-{
-	g_bScrollbars = false;
-}
-
+	document.write("<scr" + "ipt src='mobile/data.js' type='text/javascript' charset='utf-8'><\/scr" + "ipt>");
+	document.write("<scr" + "ipt src='" + globals.strContentFolder + "/frame.js' type='text/javascript' charset='utf-8'><\/scr" + "ipt>");
+	document.write("<scr" + "ipt src='" + globals.strContentFolder + "/user.js' type='text/javascript' charset='utf-8'><\/scr" + "ipt>");
+	if (window.location.protocol == "file:")
+	{
+		document.write("<scr" + "ipt src='mobile/masks.js' type='text/javascript' charset='utf-8'><\/scr" + "ipt>");
+	}
 </script>
 
-<script SRC="presentation_content/user.js" TYPE="text/javascript"></script>
-<script src="presentation_content/presentation.js" type="text/javascript"></script>
-
-</head>
-
-<body style="height: 100%;" onunload="DoOnClose()" onbeforeunload="DoOnClose()">
-
-<script type="text/javascript">
-
-document.bgColor = g_strBgColor;
-
-if (g_bScrollbars)
-{
-	document.write("<table border=0 cellpadding=0 cellspacing=0 width='100%' height='100%' align=center>");
-	document.write("<tr>");
-	document.write("<td align=center>");
-}
-
-	WriteSwfObject(g_strSwfFile,
-		       g_nWidth, 
-		       g_nHeight, 
-		       g_strScale,
-		       g_strAlign, 
-		       g_strQuality, 
-		       g_strBgColor, 
-			   g_bCaptureRC,
-			   g_strWMode,
-		       g_strFlashVars);
-
-if (g_bScrollbars)
-{
-	document.write("</td>");
-	document.write("</tr>");
-	document.write("</table>");
-}
-
-ResizeBrowser(g_strBrowserSize);
-</script>
-
-<DIV id='divEmail' style="position: absolute; width: 10; height: 10; left: 10; top: 10; visibility:hidden" ></DIV>
-
-<DIV id='divWebObjects'></DIV>
-
-</body>
 </html>
